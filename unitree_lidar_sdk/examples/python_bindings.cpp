@@ -54,6 +54,25 @@ PYBIND11_MODULE(lidar, M) {
                 .export_values();
 
         ;
+        {
+                py::class_<PointUnitree>(m, "PointUnitree")
+                .def(py::init<>()) // Default constructor
+                .def_readwrite("x", &PointUnitree::x)
+                .def_readwrite("y", &PointUnitree::y)
+                .def_readwrite("z", &PointUnitree::z)
+                .def_readwrite("intensity", &PointUnitree::intensity)
+                .def_readwrite("time", &PointUnitree::time)
+                .def_readwrite("ring", &PointUnitree::ring);
+        };
+
+        {
+                py::class_<PointCloudUnitree>(m, "PointCloudUnitree")
+                .def(py::init<>()) // Default constructor
+                .def_readwrite("stamp", &PointCloudUnitree::stamp)
+                .def_readwrite("id", &PointCloudUnitree::id)
+                .def_readwrite("ringNum", &PointCloudUnitree::ringNum)
+                .def_readwrite("points", &PointCloudUnitree::points);
+        };
 
         { // unitree_lidar_sdk::UnitreeLidarReader file:include/unitree_lidar_sdk.h line:128
                 pybind11::class_<unitree_lidar_sdk::UnitreeLidarReader, std::shared_ptr<unitree_lidar_sdk::UnitreeLidarReader>> cl(M, "UnitreeLidarReader", "Unitree Lidar Reader");
@@ -78,6 +97,8 @@ PYBIND11_MODULE(lidar, M) {
                 cl.def("initializeUDP", [](unitree_lidar_sdk::UnitreeLidarReader &o, unsigned short const & a0, unsigned short const & a1, std::string const & a2, unsigned short const & a3, std::string const & a4, float const & a5, float const & a6, float const & a7, float const & a8) -> int { return o.initializeUDP(a0, a1, a2, a3, a4, a5, a6, a7, a8); }, "", pybind11::arg("cloud_scan_num"), pybind11::arg("lidar_port"), pybind11::arg("lidar_ip"), pybind11::arg("local_port"), pybind11::arg("local_ip"), pybind11::arg("rotate_yaw_bias"), pybind11::arg("range_scale"), pybind11::arg("range_bias"), pybind11::arg("range_max"));
                 cl.def("initializeUDP", (int (unitree_lidar_sdk::UnitreeLidarReader::*)(unsigned short, unsigned short, std::string, unsigned short, std::string, float, float, float, float, float)) &unitree_lidar_sdk::UnitreeLidarReader::initializeUDP, "Initialize for UDP board\n\nC++: unitree_lidar_sdk::UnitreeLidarReader::initializeUDP(unsigned short, unsigned short, std::string, unsigned short, std::string, float, float, float, float, float) --> int", pybind11::arg("cloud_scan_num"), pybind11::arg("lidar_port"), pybind11::arg("lidar_ip"), pybind11::arg("local_port"), pybind11::arg("local_ip"), pybind11::arg("rotate_yaw_bias"), pybind11::arg("range_scale"), pybind11::arg("range_bias"), pybind11::arg("range_max"), pybind11::arg("range_min"));
                 cl.def("closeUDP", (bool (unitree_lidar_sdk::UnitreeLidarReader::*)()) &unitree_lidar_sdk::UnitreeLidarReader::closeUDP, "Close UDP connection\n\nC++: unitree_lidar_sdk::UnitreeLidarReader::closeUDP() --> bool");
+                cl.def("getIMU", &unitree_lidar_sdk::UnitreeLidarReader::getIMU);
+                cl.def("getCloud", &unitree_lidar_sdk::UnitreeLidarReader::getCloud);
                 cl.def("runParse", (enum unitree_lidar_sdk::MessageType (unitree_lidar_sdk::UnitreeLidarReader::*)()) &unitree_lidar_sdk::UnitreeLidarReader::runParse, "Try to parse a message from the serial buffer once.\n \n\n This is the main entrance of this class\n \n\n \n  NONE if no valid message parsed.\n  IMU if a new imu message is parsed.\n  POINTCLOUD if a new cloud is cached.\n\nC++: unitree_lidar_sdk::UnitreeLidarReader::runParse() --> enum unitree_lidar_sdk::MessageType");
                 cl.def("reset", (void (unitree_lidar_sdk::UnitreeLidarReader::*)()) &unitree_lidar_sdk::UnitreeLidarReader::reset, "Reset lidar\n\nC++: unitree_lidar_sdk::UnitreeLidarReader::reset() --> void");
                 cl.def("getVersionOfFirmware", (std::string (unitree_lidar_sdk::UnitreeLidarReader::*)() const) &unitree_lidar_sdk::UnitreeLidarReader::getVersionOfFirmware, "Get Version of lidar firmware\n\nC++: unitree_lidar_sdk::UnitreeLidarReader::getVersionOfFirmware() const --> std::string");
