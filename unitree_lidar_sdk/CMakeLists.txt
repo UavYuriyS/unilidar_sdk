@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.12)
 project(unitree_lidar_sdk)
 
 set(CMAKE_BUILD_TYPE "Release")
@@ -32,3 +32,14 @@ add_executable(unilidar_subscriber_udp
   examples/unilidar_subscriber_udp.cpp
 )
 target_link_libraries(unilidar_subscriber_udp  libunitree_lidar_sdk.a )
+
+set(PYBIND11_FINDPYTHON ON)
+find_package(pybind11 CONFIG REQUIRED)
+
+#add_library(python_bindings MODULE include/python_bindings.cpp)
+#target_link_libraries(python_bindings PRIVATE pybind11::module Python3::Python)
+
+pybind11_add_module(lidar examples/python_bindings.cpp)
+target_link_libraries(lidar PRIVATE libunitree_lidar_sdk.a )
+set_target_properties(lidar PROPERTIES LINKER_LANGUAGE CXX)
+install(TARGETS lidar DESTINATION .)
