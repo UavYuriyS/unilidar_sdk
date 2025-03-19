@@ -55,23 +55,23 @@ PYBIND11_MODULE(lidar, M) {
 
         ;
         {
-                py::class_<PointUnitree>(m, "PointUnitree")
-                .def(py::init<>()) // Default constructor
-                .def_readwrite("x", &PointUnitree::x)
-                .def_readwrite("y", &PointUnitree::y)
-                .def_readwrite("z", &PointUnitree::z)
-                .def_readwrite("intensity", &PointUnitree::intensity)
-                .def_readwrite("time", &PointUnitree::time)
-                .def_readwrite("ring", &PointUnitree::ring);
+                pybind11::class_<unitree_lidar_sdk::PointUnitree>(M, "PointUnitree")
+                .def(pybind11::init<>()) // Default constructor
+                .def_readwrite("x", &unitree_lidar_sdk::PointUnitree::x)
+                .def_readwrite("y", &unitree_lidar_sdk::PointUnitree::y)
+                .def_readwrite("z", &unitree_lidar_sdk::PointUnitree::z)
+                .def_readwrite("intensity", &unitree_lidar_sdk::PointUnitree::intensity)
+                .def_readwrite("time", &unitree_lidar_sdk::PointUnitree::time)
+                .def_readwrite("ring", &unitree_lidar_sdk::PointUnitree::ring);
         };
 
         {
-                py::class_<PointCloudUnitree>(m, "PointCloudUnitree")
-                .def(py::init<>()) // Default constructor
-                .def_readwrite("stamp", &PointCloudUnitree::stamp)
-                .def_readwrite("id", &PointCloudUnitree::id)
-                .def_readwrite("ringNum", &PointCloudUnitree::ringNum)
-                .def_readwrite("points", &PointCloudUnitree::points);
+                pybind11::class_<unitree_lidar_sdk::PointCloudUnitree>(M, "PointCloudUnitree")
+                .def(pybind11::init<>()) // Default constructor
+                .def_readwrite("stamp", &unitree_lidar_sdk::PointCloudUnitree::stamp)
+                .def_readwrite("id", &unitree_lidar_sdk::PointCloudUnitree::id)
+                .def_readwrite("ringNum", &unitree_lidar_sdk::PointCloudUnitree::ringNum)
+                .def_readwrite("points", &unitree_lidar_sdk::PointCloudUnitree::points);
         };
 
         { // unitree_lidar_sdk::UnitreeLidarReader file:include/unitree_lidar_sdk.h line:128
