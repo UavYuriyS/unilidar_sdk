@@ -81,19 +81,21 @@ PYBIND11_MODULE(lidar, M) {
                 .def(pybind11::init<>()) // Default constructor
                 .def_readwrite("stamp", &unitree_lidar_sdk::IMUUnitree::stamp)
                 .def_readwrite("id", &unitree_lidar_sdk::IMUUnitree::id)
-                .def_property_readonly("quaternion", [](pybind11::object& obj) {
-                            auto o = obj.cast<unitree_lidar_sdk::IMUUnitree&>(); // must be 'cast<a_t&>'
-                            return pybind11::array_t<float>{4, o.quaternion, obj};
-                        }
-                )
-                .def_property_readonly("angular_velocity", [](pybind11::object& obj) {
-                    auto o = obj.cast<unitree_lidar_sdk::IMUUnitree&>(); // must be 'cast<a_t&>'
-                    return pybind11::array_t<float>{3, o.angular_velocity, obj};
-                })
-                .def_property_readonly("linear_acceleration", [](pybind11::object& obj) {
-                    auto o = obj.cast<unitree_lidar_sdk::IMUUnitree&>(); // must be 'cast<a_t&>'
-                    return pybind11::array_t<float>{3, o.linear_acceleration, obj};
-                });
+                .def_property("quaternion", [](unitree_lidar_sdk::IMUUnitree &c) -> pybind11::array {
+                          auto dtype = pybind11::dtype(pybind11::format_descriptor<float>::format());
+                          auto base = pybind11::array(dtype, {4}, {sizeof(float)});
+                          return pybind11::array(dtype, {4}, {sizeof(float)}, c.quaternion, base);
+                        }, [](unitree_lidar_sdk::IMUUnitree &c) {})
+                .def_property("angular_velocity", [](unitree_lidar_sdk::IMUUnitree &c) -> pybind11::array {
+                          auto dtype = pybind11::dtype(pybind11::format_descriptor<float>::format());
+                          auto base = pybind11::array(dtype, {3}, {sizeof(float)});
+                          return pybind11::array(dtype, {3}, {sizeof(float)}, c.angular_velocity, base);
+                        }, [](unitree_lidar_sdk::IMUUnitree &c) {})
+                .def_property("linear_acceleration", [](unitree_lidar_sdk::IMUUnitree &c) -> pybind11::array {
+                          auto dtype = pybind11::dtype(pybind11::format_descriptor<float>::format());
+                          auto base = pybind11::array(dtype, {3}, {sizeof(float)});
+                          return pybind11::array(dtype, {3}, {sizeof(float)}, c.linear_acceleration, base);
+                        }, [](unitree_lidar_sdk::IMUUnitree &c) {});
         };
 
         { // unitree_lidar_sdk::UnitreeLidarReader file:include/unitree_lidar_sdk.h line:128
