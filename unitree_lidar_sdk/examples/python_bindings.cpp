@@ -2,6 +2,8 @@
 // Created by kotik on 19/03/2025.
 //
 #include <pybind11/pybind11.h>
+#include <pybind11/numpy.h>
+#include <pybind11/stl.h>
 #ifndef PYTHON_BINDINGS_H
 #include "unitree_lidar_sdk.h"
 #include <memory>
@@ -72,6 +74,26 @@ PYBIND11_MODULE(lidar, M) {
                 .def_readwrite("id", &unitree_lidar_sdk::PointCloudUnitree::id)
                 .def_readwrite("ringNum", &unitree_lidar_sdk::PointCloudUnitree::ringNum)
                 .def_readwrite("points", &unitree_lidar_sdk::PointCloudUnitree::points);
+        };
+
+        {
+                pybind11::class_<unitree_lidar_sdk::IMUUnitree>(M, "IMUUnitree")
+                .def(pybind11::init<>()) // Default constructor
+                .def_readwrite("stamp", &unitree_lidar_sdk::IMUUnitree::stamp)
+                .def_readwrite("id", &unitree_lidar_sdk::IMUUnitree::id)
+                .def_property_readonly("quaternion", [](pybind11::object& obj) {
+                            auto o = obj.cast<unitree_lidar_sdk::IMUUnitree&>(); // must be 'cast<a_t&>'
+                            return pybind11::array_t<float>{4, o.quaternion, obj};
+                        }
+                )
+                .def_property_readonly("angular_velocity", [](pybind11::object& obj) {
+                    auto o = obj.cast<unitree_lidar_sdk::IMUUnitree&>(); // must be 'cast<a_t&>'
+                    return pybind11::array_t<float>{3, o.angular_velocity, obj};
+                })
+                .def_property_readonly("linear_acceleration", [](pybind11::object& obj) {
+                    auto o = obj.cast<unitree_lidar_sdk::IMUUnitree&>(); // must be 'cast<a_t&>'
+                    return pybind11::array_t<float>{3, o.linear_acceleration, obj};
+                });
         };
 
         { // unitree_lidar_sdk::UnitreeLidarReader file:include/unitree_lidar_sdk.h line:128
